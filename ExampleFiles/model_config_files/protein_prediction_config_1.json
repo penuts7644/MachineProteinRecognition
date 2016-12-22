@@ -1,0 +1,54 @@
+{
+  "layer_config": [
+    {
+      "class_name": "Convolution2D",
+      "input_shape_dimensions": "3",
+      "config": {
+        "nb_filter": "80",
+        "nb_row": "5",
+        "nb_col": "5",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "MaxPooling2D",
+      "config": {
+        "pool_size": "(5, 5)",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Convolution2D",
+      "config": {
+        "nb_filter": "80",
+        "nb_row": "4",
+        "nb_col": "4",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Flatten",
+      "config": {}
+    },
+    {
+      "class_name": "Dense",
+      "config": {
+        "output_dim": "1",
+        "init": "'normal'",
+        "activation": "'sigmoid'"
+      }
+    }
+  ],
+  "compile_config": {
+    "loss": "'binary_crossentropy'",
+    "optimizer": "'adam'",
+    "metrics": "['accuracy']"
+  }
+}

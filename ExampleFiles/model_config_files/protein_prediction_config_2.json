@@ -1,0 +1,158 @@
+{
+  "layer_config": [
+    {
+      "class_name": "Convolution2D",
+      "input_shape_dimensions": "3",
+      "config": {
+        "nb_filter": "64",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Convolution2D",
+      "config": {
+        "nb_filter": "64",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "MaxPooling2D",
+      "config": {
+        "pool_size": "(2, 2)",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Convolution2D",
+      "config": {
+        "nb_filter": "128",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Convolution2D",
+      "config": {
+        "nb_filter": "128",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "MaxPooling2D",
+      "config": {
+        "pool_size": "(2, 2)",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Convolution2D",
+      "config": {
+        "nb_filter": "256",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Convolution2D",
+      "config": {
+        "nb_filter": "256",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Convolution2D",
+      "config": {
+        "nb_filter": "256",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Convolution2D",
+      "config": {
+        "nb_filter": "256",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'normal'",
+        "activation": "'linear'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "MaxPooling2D",
+      "config": {
+        "pool_size": "(2, 2)",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Flatten",
+      "config": {}
+    },
+    {
+      "class_name": "Dense",
+      "config": {
+        "output_dim": "512",
+        "init": "'normal'",
+        "activation": "'sigmoid'"
+      }
+    },
+    {
+      "class_name": "Dense",
+      "config": {
+        "output_dim": "512",
+        "init": "'normal'",
+        "activation": "'sigmoid'"
+      }
+    },
+    {
+      "class_name": "Dense",
+      "config": {
+        "output_dim": "1",
+        "init": "'normal'",
+        "activation": "'sigmoid'"
+      }
+    }
+  ],
+  "compile_config": {
+    "loss": "'binary_crossentropy'",
+    "optimizer": "'adam'",
+    "metrics": "['accuracy']"
+  }
+}
