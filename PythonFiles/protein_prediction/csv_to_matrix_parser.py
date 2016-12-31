@@ -2,7 +2,7 @@
 
 """
 Author: Wout van Helvoirt
-Build: September 20th, 2016
+Build: January 30th, 2017
 Version: 1.0
 
 Usage:
@@ -59,7 +59,6 @@ class CsvToMatrixParser:
         # Load in the csv data and filename as numpy array, skip the commented lines.
         return pandas.read_csv(file_path,
                                header=None,
-                               dtype="int",
                                sep=self.separator,
                                comment=self.comment_char).as_matrix()
 

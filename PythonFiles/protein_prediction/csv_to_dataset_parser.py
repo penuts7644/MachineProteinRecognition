@@ -2,7 +2,7 @@
 
 """
 Author: Wout van Helvoirt
-Build: December 14th, 2016
+Build: January 30th, 2017
 Version: 1.0
 
 Usage:
@@ -62,7 +62,6 @@ class CsvToDatasetParser:
         # Load in the csv data, skip the commented lines and return data as matrix.
         return pandas.read_csv(file_path,
                                header=None,
-                               dtype="int",
                                sep=self.separator,
                                comment=self.comment_char).as_matrix()
 
@@ -86,25 +85,25 @@ class CsvToDatasetParser:
                 for j in range(0, len(matrix[0]) - (self.window_size * 3), self.hor_window * 3):
 
                     # Get the parts for each channel.
-                    contact_map = matrix[i:i + self.window_size, j:j + (self.window_size * 3):3]
-                    amino_acid_i = matrix[i:i + self.window_size, j + 1:j + 1 + (self.window_size * 3):3]
-                    amino_acid_j = matrix[i:i + self.window_size, j + 2:j + 1 + (self.window_size * 3):3]
+                    matrix_1 = matrix[i:i + self.window_size, j:j + (self.window_size * 3):3]
+                    matrix_2 = matrix[i:i + self.window_size, j + 1:j + 1 + (self.window_size * 3):3]
+                    matrix_3 = matrix[i:i + self.window_size, j + 2:j + 1 + (self.window_size * 3):3]
 
                     # Append the slice containing the 3 parts to the example list.
-                    examples.append([contact_map,
-                                     amino_acid_i,
-                                     amino_acid_j])
+                    examples.append([matrix_1,
+                                     matrix_2,
+                                     matrix_3])
                     slice_amount += 1
 
             # If files contain contact map only, don't use step size.
             else:
                 for j in range(0, len(matrix[0]) - self.window_size, self.hor_window):
 
-                    # Get the contact map slice.
-                    contact_map = matrix[i:i + self.window_size, j:j + self.window_size]
+                    # Get the matrix slice.
+                    matrix_1 = matrix[i:i + self.window_size, j:j + self.window_size]
 
-                    # Append the contact map slice to the example list.
-                    examples.append([contact_map])
+                    # Append the matrix slice to the example list.
+                    examples.append([matrix_1])
                     slice_amount += 1
 
         # Return updated examples list and the amount of slices made.
@@ -170,7 +169,7 @@ class CsvToDatasetParser:
         # Make output list layout, it has at least the same size as the unique set of partitions.
         if len(set(partition)) > amount_of_partitions:
             amount_of_partitions = len(set(partition))
-        output_list = [[] for i in range(amount_of_partitions)]
+        output_list = [[] for _ in range(amount_of_partitions)]
 
         # For each item in the partition list, append the data item to output_list index position.
         for i in range(len(partition)):

@@ -2,7 +2,7 @@
 
 """
 Author: Wout van Helvoirt
-Build: December 14th, 2016
+Build: January 30th, 2017
 Version: 1.0
 
 Usage:
@@ -42,7 +42,7 @@ class FileSearcher:
 
         # Search directory recursively for files containing file extension.
         else:
-            matched_files = [[] for i in range(self.amount_of_partitions)]
+            matched_files = [[] for _ in range(self.amount_of_partitions)]
             add_position = 0
 
             # Compile search pattern.
@@ -81,7 +81,7 @@ class FileSearcher:
         random_files_list = random.sample([j for i in files_list for j in i], amount_files)
 
         # Set the new partition list and add position.
-        random_partitioned_files_list = [[] for i in range(self.amount_of_partitions)]
+        random_partitioned_files_list = [[] for _ in range(self.amount_of_partitions)]
         add_position = 0
 
         # Partition the random files list and return it.

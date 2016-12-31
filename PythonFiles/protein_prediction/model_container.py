@@ -2,7 +2,7 @@
 
 """
 Author: Wout van Helvoirt
-Build: December 14th, 2016
+Build: January 30th, 2017
 Version: 1.0
 
 Usage:

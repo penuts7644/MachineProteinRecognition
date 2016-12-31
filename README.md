@@ -20,12 +20,12 @@ Make sure that Python 3.5.2 is installed with the following Python modules insta
 * h5py module (version 2.6.0 has been used for development)
 * Keras module (version 1.1.2 has been used for development)
 
-For the best performance it is recommended to have a GPU installed. This should speed up the training drastically.
+To achieve the best performance possible, it is recommended to have a GPU installed. This should speed up the training process drastically.
 
 ### How to use this application
-For more specific information on how to run the programs from start to finish, please read the `PythonFiles/README.md` file. --> [HERE](https://github.com/penuts7644/MachineProteinRecognition/tree/master/PythonFiles "README")
+For more specific information on how to run the programs from start to finish, please read the `PythonFiles/README.md` file. [HERE](https://github.com/penuts7644/MachineProteinRecognition/tree/master/PythonFiles "README")
 
-Want to know more about the configuration of the model? Please read the `ExampleFiles/README.md` file. --> [HERE](https://github.com/penuts7644/MachineProteinRecognition/tree/master/ExampleFiles "README")
+Want to know more about the configuration of the model? Please read the `ExampleFiles/README.md` file. [HERE](https://github.com/penuts7644/MachineProteinRecognition/tree/master/ExampleFiles "README")
 
 ### My use case & future ideas
 My target was to train a model that could recognise real protein and fake protein. Using multiple model configurations, the model should be trained on multichannel contact matrices (with the additional amino acid interaction information).
