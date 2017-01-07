@@ -6,7 +6,7 @@ Build: January 30th, 2017
 
 Version: 1.0
 
-This Python module was build using Python version 3.5.2 and is capable to do four things. It can process the desired pdb files to be used for training. Add more diversity to the training files by slightly modifying the processed pdb files. Train a model using layers given by a configuration file and finally predict new data using the created model.
+This Python module was build using Python version 3.5.2 and is capable to do five things. It can process the desired pdb files to be used for training. Add more diversity to the training files by slightly modifying the processed pdb files. Train a model using layers given by a configuration file, resume training with a previously created model and finally predict new data using the created model.
 
 ### 1. Generating the input data
 ```
@@ -81,9 +81,9 @@ Now the input files are ready, lets train a model (`model_trainer.py`). Three op
 
 #### Example command:
 ```
-python3 model_trainer.py -i /location/to/input/csv/files/ -o /location/to/output/directory/ -c /location/to/json/model/config/file -b 100 -e 10 -r 2 -w 100 -H 5 -V 5 -v 60 -t 60 -M
+python3 model_trainer.py -i /location/to/input/csv/files/ -o /location/to/output/directory/ -c /location/to/json/model/config/file -b 10 -e 10 -r 2 -w 100 -H 5 -V 5 -v 60 -t 60 -M
 ```
-The model is created with the configuration file. Training is done in two rounds, each with half of the found input csv files. Within each round there will will be 10 epochs. training will be done with batches of 100 slices. The input data is multichannel and thus contains amino acid information. The input files are sliced in matrices of 100 by 100 in size and skipping 5 steps horizontally and vertically before creating another slice. The validation and test datasets will both contain 60 percent of 1/4 of the total amount of slices. The input shape for each batch will be (100, 3, 100, 100).
+The model is created with the configuration file. Training is done in two rounds, each with half of the found input csv files. Within each round there will will be 10 epochs. Training will be done with batches of 10 slices. The input data is multichannel and thus contains amino acid information. The input files are sliced in matrices of 100 by 100 in size and skipping 5 steps horizontally and vertically before creating another slice. The validation and test datasets will both contain 60 percent of 1/4 of the total amount of slices. The input shape for each batch will be (10, 3, 100, 100).
 
 #### Python requirements:
 * Pandas module (version 0.19.1 has been used for development)
@@ -93,7 +93,44 @@ The model is created with the configuration file. Training is done in two rounds
 * h5py module (version 2.6.0 has been used for development)
 * Keras module (version 1.1.2 has been used for development)
 
-### 4. Predicting classes of data
+### 4. Resume training with a previously created model
+```
+-i, --input_dir,             [REQUIRED] Input path directory that contains the wanted files.
+-m, --model_file_path,       [REQUIRED] The file path to the model.
+-w, --weights_file_path,     [REQUIRED] The file path to the pre-calculated weights.
+-c, --config_file_path,      [REQUIRED] The json file path to the model and compile configuration.
+-b, --batch_size,            The size of the batches used on the train, validation and test data. Default integer 32
+-e, --epochs,                The number of epochs with the samples within a training rounds. Default integer 10
+-r, --training_rounds,       The number of training rounds to divide the number of input files over. Default integer 1
+-H, --hor_window_movement,   The amount of horizontal steps the window should make for a new slice of the input file.
+                             Default integer 1
+-V, --ver_window_movement,   Same as --hor_window_movement option, but than for vertical movement. Default integer 1
+-v, --validation_percentage, The percentage to take from one-fourth of the total amount of input files. The outcome is
+                             rounded down and used to define the amount of input files for the validation set. Leftover
+                             amount will be added to the train set. The train set will always contain at least 50
+                             percent of the total amount of input files given. Default int 80
+-t, --test_percentage,       Same as --validation_percentage option, but then to make the test set. Default int 80
+-M, --multichannel_files,    Do the files contain multiple channels? If given, each slice will contain three matrices:
+                             contact matrix, amino acid i matrix and amino acid j matrix. Otherwise a slice will contain
+                             only the contact matrix. Default boolean False.
+```
+Lets train an existing model (`model_updater.py`). Four options are required, the input directory with the csv matrices, the model file, the weights file and the model configuration json file containing compile information for the model. With `-b, --batch_size`, users can specify the batch size to use in each epoch round. This can reduce the memory usage during training by a lot. The amount of epoch rounds with the current data with `-e, --epochs`. The training rounds (`-r, --training_rounds`) specify the amount of training moments. This will split the total amount of input files to use a part of these files for each rounds. This can be use full when training on very large data sets that do not fit in memory at once. To create the three dataset (train, validation and test), the files need to be sliced in parts. The window_size is used from the model file given. The `-H, --hor_window_movement` and `-V, --ver_window_movement` options specify the positions to slice in the files horizontally and vertically respectively. The `-v, --validation_percentage` and `-t, --test_percentage` specify the amount of the created slices to be used for validation and test dataset respectively. The train dataset will contain al least 50 percent of all the slices. With `-M, --multichannel_files`, users can specify the type of input files. If not given, the datasets will have a shape of (total_amount_of_slices, 1, window_size, window_size). If given, the datasets will have a shape of (total_amount_of_slices, 3, window_size, window_size).
+
+#### Example command:
+```
+python3 model_updater.py -i /location/to/input/csv/files/ -m /location/to/model/file -w /location/to/weights/file -c /location/to/json/model/config/file -b 10 -e 10 -r 2 -H 5 -V 5 -v 60 -t 60 -M
+```
+The model is created with the configuration file. Training is done in two rounds, each with half of the found input csv files. Within each round there will will be 10 epochs. Training will be done with batches of 10 slices. The input data is multichannel and thus contains amino acid information. The multichannel input data files are converted into one dataset using window_size found in the model file. After each slice, 5 steps horizontally and vertically before creating another slice. The validation and test datasets will both contain 60 percent of 1/4 of the total amount of slices. The input shape for each batch has this basic structure (10, 3, window_size, window_size).
+
+#### Python requirements:
+* Pandas module (version 0.19.1 has been used for development)
+* TensorFlow module (version r0.10/r0.12 has been used for development)
+* NumPy module (version 1.11.2 has been used for development)
+* scikit-learn module (version 0.18.1 has been used for development)
+* h5py module (version 2.6.0 has been used for development)
+* Keras module (version 1.1.2 has been used for development)
+
+### 5. Predicting classes of data
 ```
 -i, --input_dir,           [REQUIRED] Input path directory that contains the files to predict.
 -m, --model_file_path,     [REQUIRED] The file path to the model.
@@ -111,9 +148,9 @@ Training has been completed. The classes of new data can be predicted using the 
 
 #### Example command:
 ```
-python3 class_predicter.py -i /location/to/input/csv/files/ -m /location/to/model/file -w /location/to/weights/file -c /location/to/json/model/config/file -b 100 -H 5 -V 5 -M
+python3 class_predicter.py -i /location/to/input/csv/files/ -m /location/to/model/file -w /location/to/weights/file -c /location/to/json/model/config/file -b 10 -H 5 -V 5 -M
 ```
-The model is imported and the calculated weight are set. Using the configuration file the model is compiled. The multichannel input data files are converted into one dataset using window_size found in the model file. After each slice 5 steps horizontally will be taken for the next slice and 5 steps vertically when no horizontal slices can be made from the line. Predicting is done in batches of 100.
+The model is imported and the calculated weight are set. Using the configuration file the model is compiled. The multichannel input data files are converted into one dataset using window_size found in the model file. After each slice, 5 steps horizontally will be taken for the next slice and 5 steps vertically when no horizontal slices can be made from the line. Predicting is done in batches of 10.
 
 #### Python requirements:
 * Pandas module (version 0.19.1 has been used for development)
