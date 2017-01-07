@@ -6,20 +6,20 @@ Build: January 30th, 2017
 Version: 1.0
 
 Usage:
-This program can be used for training a model with protein contact/distance matrices as data set. It reads labels and
-matrix data from the csv data files and creates label and data batches for the training, validation and testing. It
-trains the model using the train and validation data and tests the model using the test data. At last, the model and
-model weights will be written to disk as JSON and HDF5 file respectively. It uses the Python files located in the
-modules folder.
+This program can be used for resuming the training of a model with protein contact/distance matrices as data set. It
+reads labels and matrix data from the csv data files and creates label and data batches for the training, validation and
+testing. It trains the loaded model using the train and validation data and tests the model using the test data. At
+last, the updated model and model weights will be written to disk as JSON and HDF5 file respectively. It uses the Python
+files located in the modules folder.
 
 Input:
 -i, --input_dir,             [REQUIRED] Input path directory that contains the wanted files.
--i, --output_dir,            [REQUIRED] Output path directory to write the model files to and TensorBoard log.
+-m, --model_file_path,       [REQUIRED] The file path to the model.
+-w, --weights_file_path,     [REQUIRED] The file path to the pre-calculated weights.
 -c, --config_file_path,      [REQUIRED] The json file path to the model and compile configuration.
 -b, --batch_size,            The size of the batches used on the train, validation and test data. Default integer 32
 -e, --epochs,                The number of epochs with the samples within a training rounds. Default integer 10
 -r, --training_rounds,       The number of training rounds to divide the number of input files over. Default integer 1
--w, --window_size,           The window size to be used for slicing the input files. Default integer 50
 -H, --hor_window_movement,   The amount of horizontal steps the window should make for a new slice of the input file.
                              Default integer 1
 -V, --ver_window_movement,   Same as --hor_window_movement option, but than for vertical movement. Default integer 1
@@ -33,6 +33,8 @@ Input:
                              only the contact matrix. Default boolean False.
 """
 
+import os
+
 import protein_prediction as pp
 
 
@@ -45,8 +47,10 @@ def main():
     # option, extended option, action, type, default, minimum, maximum, help/required info
     options = [["i", "input_dir", "store", "string", None, None, None,
                 "[REQUIRED] Input path directory that contains the wanted files."],
-               ["o", "output_dir", "store", "string", None, None, None,
-                "[REQUIRED] Output path directory to write the model files to and TensorBoard log."],
+               ["m", "model_file_path", "store", "string", None, None, None,
+                "[REQUIRED] The file path to the model."],
+               ["w", "weights_file_path", "store", "string", None, None, None,
+                "[REQUIRED] The file path to the pre-calculated weights."],
                ["c", "config_file_path", "store", "string", None, None, None,
                 "[REQUIRED] The json file path to the model and compile configuration."],
                ["b", "batch_size", "store", "int", 32, 1, None,
@@ -55,8 +59,6 @@ def main():
                 "The number of epochs with the samples within a training rounds. Default integer 10"],
                ["r", "training_rounds", "store", "int", 1, 1, None,
                 "The number of training rounds to divide the number of input files over. Default integer 1"],
-               ["w", "window_size", "store", "int", 50, 10, None,
-                "The window size to be used for slicing the input files. Default integer 50"],
                ["H", "hor_window_movement", "store", "int", 1, 1, None,
                 "The number of horizontal steps the window should make before taking a new slice of the input file. "
                 "Default integer 1"],
@@ -80,8 +82,17 @@ def main():
                                amount_of_partitions=parse.arguments["training_rounds"])
     files_list = searcher.search_dir(input_dir=parse.arguments["input_dir"])
 
-    # Set dataset creation requirements.
-    dataset_creator = pp.CsvToDatasetParser(window_size=parse.arguments["window_size"],
+    # Initialize the model container.
+    model_container = pp.ModelContainer()
+
+    # Load the model plus weights and set the compile method.
+    model_container.read(model_file=parse.arguments["model_file_path"],
+                         weights_file=parse.arguments["weights_file_path"],
+                         config_file=parse.arguments["config_file_path"])
+
+    # Get the window size used in the model, set requirements.
+    window_size = model_container.model.get_config()[0]["config"]["batch_input_shape"][-1]
+    dataset_creator = pp.CsvToDatasetParser(window_size=window_size,
                                             hor_window=parse.arguments["hor_window_movement"],
                                             ver_window=parse.arguments["ver_window_movement"],
                                             validation_size=parse.arguments["validation_percentage"],
@@ -89,14 +100,6 @@ def main():
                                             separator=" ",
                                             comment_char="#",
                                             multichannel=parse.arguments["multichannel_files"])
-
-    # Initialize the model container.
-    model_container = pp.ModelContainer()
-
-    # Make the model using the configurations.
-    model_container.create_model(config_file=parse.arguments["config_file_path"],
-                                 window_size=parse.arguments["window_size"],
-                                 multichannel=parse.arguments["multichannel_files"])
 
     # Generate the dataset and train the model for each part in the files list.
     for i in range(len(files_list)):
@@ -110,14 +113,14 @@ def main():
                                     validation_set=validation_set,
                                     num_epochs=parse.arguments["epochs"],
                                     batch_size=parse.arguments["batch_size"],
-                                    output_dir=parse.arguments["output_dir"])
+                                    output_dir=os.path.dirname(os.path.abspath(parse.arguments["model_file_path"])))
 
         # Test the model accuracy.
         model_container.test_model(test_set=test_set,
                                    batch_size=parse.arguments["batch_size"])
 
     # Write the model to a file in JSON format and weight in HDF5.
-    model_container.write(output_dir=parse.arguments["output_dir"],
+    model_container.write(output_dir=os.path.dirname(os.path.abspath(parse.arguments["model_file_path"])),
                           file_name="protein_prediction")
 
 

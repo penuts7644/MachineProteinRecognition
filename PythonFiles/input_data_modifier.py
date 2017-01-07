@@ -6,11 +6,11 @@ Build: January 30th, 2017
 Version: 1.0
 
 Usage:
-This program can be used for creating fake maps to supplement the input data set for training in TensorFlow.
-It uses multiple existing protein distance/contact maps to (csv file) to generate one fake distance/contact map. It
-combines random line blocks from each input file and adds them randomly to a template distance/contact map. The lower
-triangle of the matrix is transposed to the upper part of the matrix. The final matrix is validated and 'None' values
-are replaced with random values in the matrix. It uses the Python files located in the modules folder.
+This program can be used for creating fake matrices to supplement the input data set for training in TensorFlow.
+It uses multiple existing protein distance/contact matrices to (csv file) to generate one fake distance/contact matrix.
+It combines random line blocks from each input file and adds them randomly to a template distance/contact matrix. The
+lower triangle of the matrix is transposed to the upper part of the matrix. The final matrix is validated and 'None'
+values are replaced with random values in the matrix. It uses the Python files located in the modules folder.
 
 Input:
 -i, --input_dir,           [REQUIRED] Input path directory that contains the wanted files.

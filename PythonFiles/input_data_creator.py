@@ -13,8 +13,8 @@ Input:
 -i, --input_dir,          [REQUIRED] Input path directory that contains the pdb files to process.
 -o, --output_dir,         [REQUIRED] Output path directory to write the processed csv files to.
 -l, --header_line,        [REQUIRED] The header line to place at the top of each generated file.
--c, --cutoff_value,       The cutoff value to be used when converting protein distance maps to protein contact maps.
-                          Default integer 8
+-c, --cutoff_value,       The cutoff value to be used when converting protein distance matrices to protein contact
+                          matrices. Default integer 8
 -C, --contact_files,      Do you want to generate contact matrices? If given, each distance matrix will be converted
                           using the value of --cutoff_value. Default boolean False.
 -M, --multichannel_files, Do you want the matrices to have multiple channels? If given, the matrices, contact or not,
@@ -41,8 +41,8 @@ def main():
                ["l", "header_line", "store", "string", None, None, None,
                 "[REQUIRED] The header line to place at the top of each generated file."],
                ["c", "cutoff_value", "store", "int", 8, 1, None,
-                "The cutoff value to be used when converting protein distance maps to protein contact maps."
-                " Default integer 8"],
+                "The cutoff value to be used when converting protein distance matrices to protein contact"
+                "matrices. Default integer 8"],
                ["C", "contact_files", "store_true", None, False, None, None,
                 "Do you want to generate contact matrices? If given, each distance matrix will be converted using "
                 "the value of --cutoff_value. Default boolean False."],

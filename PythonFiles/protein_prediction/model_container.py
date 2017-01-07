@@ -304,6 +304,28 @@ class ModelContainer:
         print("Accuracy of {0}%".format((correct / len(data_set[1])) * 100))
         print("\n")
 
+    @staticmethod
+    def _modify_filename(output_dir,
+                         file_name,
+                         file_type):
+        """
+        This function modifies the file name if the given file name exists.
+        Input: The output directory, filename to check and file type.
+        Output: The filename given, modified if necessary.
+        """
+
+        # Set original file name and count the file names tried.
+        orig_file_name = file_name
+        file_count = 1
+
+        # Keep modifying the file name if it exists.
+        while os.path.isfile(os.path.join(output_dir, file_name + "." + file_type)):
+            file_name = str(orig_file_name) + "_" + str(file_count)
+            file_count += 1
+
+        # Return the file name when unique.
+        return file_name + "." + file_type
+
     def write(self,
               output_dir,
               file_name):
@@ -317,15 +339,25 @@ class ModelContainer:
         if not os.path.isdir(output_dir):
             os.makedirs(output_dir, exist_ok=True)
 
+        # Check if the file name is unique, modify it if necessary.
+        unique_model_file_name = self._modify_filename(output_dir=output_dir,
+                                                       file_name=file_name + "_model",
+                                                       file_type="json")
+
         # Serialize model to JSON format and write it to a file.
         model_json = self.model.to_json()
-        with open(os.path.join(output_dir, file_name + "_model.json"), "w") as json_file:
+        with open(os.path.join(output_dir, unique_model_file_name), "w") as json_file:
             json_file.write(model_json)
-        print("File " + os.path.join(output_dir, file_name + "_model.json") + " written")
+        print("File " + os.path.join(output_dir, unique_model_file_name) + " written")
+
+        # Check if the file name is unique, modify it if necessary.
+        unique_weights_file_name = self._modify_filename(output_dir=output_dir,
+                                                         file_name=file_name + "_weights",
+                                                         file_type="h5")
 
         # Serialize the calculated weights to HDF5.
-        self.model.save_weights(os.path.join(output_dir, file_name + "_weights.h5"))
-        print("File " + os.path.join(output_dir, file_name + "_weights.h5") + " written")
+        self.model.save_weights(os.path.join(output_dir, unique_weights_file_name))
+        print("File " + os.path.join(output_dir, unique_weights_file_name) + " written")
 
     def read(self,
              model_file,
