@@ -6,7 +6,7 @@ Build: January 30th, 2017
 
 Version: 1.0
 
-This Python module was build using Python version 3.5.2 and is capable to do four things. It can process the desired pdb files to be used for training. Add more diversity to the training files by slightly modifying the processed pdb files. Train a model using layers given by a configuration file and finally predict new data using the created model.
+This Python module was build using Python version 3.5.2 and is capable to do five things. It can process the desired pdb files to be used for training. Add more diversity to the training files by slightly modifying the processed pdb files. Train a model using layers given by a configuration file, resume training on a previously generated model and finally predict new data using the created model.
 The ExampleFiles directory contains example configuration files to use for setting up the model, some test pdb files, a bash file to run the training program via a slurm manager and a bash file to collect the pdb id's from a cullpdb file.
 
 ### Getting set up
