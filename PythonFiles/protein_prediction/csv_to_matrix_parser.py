@@ -84,12 +84,14 @@ class CsvToMatrixParser:
 
         # Set step_size and get a sample with lines to modify.
         step_size = math.floor(len(matrix[0]) / self.modify_percentage)
+        if step_size == 0:
+            step_size = 1
         lines_sample = self._get_percentage_sample(matrix_size=len(matrix))
 
         # For each line, modify the line.
         for line_index in lines_sample:
 
-            # For each three values in the line, modify amino acid i.
+            # For each selected values in the line, modify it.
             for j in range(0, int(len(matrix[line_index])), step_size):
 
                 # Pick random location in the line to use as new value.

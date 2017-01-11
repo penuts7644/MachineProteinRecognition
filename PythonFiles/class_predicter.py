@@ -23,6 +23,8 @@ Input:
                            only the contact matrix. Default boolean False.
 """
 
+import sys
+
 import protein_prediction as pp
 
 
@@ -79,9 +81,16 @@ def main():
                                             multichannel=parse.arguments["multichannel_files"])
     data_set = dataset_creator.create_datasets(files_list=files_list[0])[0]
 
-    # Calculate the predictions for the data data.
-    model_container.predict_data(data_set=data_set,
-                                 batch_size=parse.arguments["batch_size"])
+    # Give error message if the data set contains zero items.
+    if len(data_set[0]) > 0:
+
+        # Calculate the predictions for the data data.
+        model_container.predict_data(data_set=data_set,
+                                     batch_size=parse.arguments["batch_size"])
+    else:
+        print("Error: Prediction data set ({0}) can't contain 0 samples.".format(len(data_set[0])),
+              file=sys.stderr)
+        sys.exit()
 
 
 if __name__ == "__main__":

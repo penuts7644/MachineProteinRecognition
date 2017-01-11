@@ -34,6 +34,7 @@ Input:
 """
 
 import os
+import sys
 
 import protein_prediction as pp
 
@@ -108,16 +109,26 @@ def main():
             validation_set, \
             test_set = dataset_creator.create_datasets(files_list=files_list[i])
 
-        # Train the model with the current dataset.
-        model_container.train_model(train_set=train_set,
-                                    validation_set=validation_set,
-                                    num_epochs=parse.arguments["epochs"],
-                                    batch_size=parse.arguments["batch_size"],
-                                    output_dir=os.path.dirname(os.path.abspath(parse.arguments["model_file_path"])))
+        # Give error message if the train, validation or test sets contain zero items.
+        if len(train_set[0]) > 0 or len(validation_set[0]) > 0 or len(test_set[0]) > 0:
 
-        # Test the model accuracy.
-        model_container.test_model(test_set=test_set,
-                                   batch_size=parse.arguments["batch_size"])
+            # Train the model with the current dataset.
+            model_container.train_model(train_set=train_set,
+                                        validation_set=validation_set,
+                                        num_epochs=parse.arguments["epochs"],
+                                        batch_size=parse.arguments["batch_size"],
+                                        output_dir=os.path.dirname(os.path.abspath(parse.arguments["model_file_path"])))
+
+            # Test the model accuracy.
+            model_container.test_model(test_set=test_set,
+                                       batch_size=parse.arguments["batch_size"])
+        else:
+            print("Error: Train ({0}), validation ({1}) or test ({2}) set can't contain 0 samples."
+                  .format(len(train_set[0]),
+                          len(validation_set[0]),
+                          len(test_set[0])),
+                  file=sys.stderr)
+            sys.exit()
 
     # Write the model to a file in JSON format and weight in HDF5.
     model_container.write(output_dir=os.path.dirname(os.path.abspath(parse.arguments["model_file_path"])),

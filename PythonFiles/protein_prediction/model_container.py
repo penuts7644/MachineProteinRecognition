@@ -21,6 +21,7 @@ import json
 
 from keras.models import Sequential, model_from_json
 from keras.layers import *
+from keras.optimizers import *
 from keras.utils.np_utils import categorical_probas_to_classes
 from keras.callbacks import TensorBoard
 from sklearn.preprocessing import LabelEncoder
