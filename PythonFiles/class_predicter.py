@@ -84,9 +84,19 @@ def main():
     # Give error message if the data set contains zero items.
     if len(data_set[0]) > 0:
 
-        # Calculate the predictions for the data data.
-        model_container.predict_data(data_set=data_set,
-                                     batch_size=parse.arguments["batch_size"])
+        # Calculate the predictions for the data.
+        decoded_predictions = model_container.predict_data(data_set=data_set,
+                                                           batch_size=parse.arguments["batch_size"])
+
+        # Print information about the predictions to the user.
+        correct = len([i for i, j in zip(data_set[1], decoded_predictions) if i == j])
+        # print("Original:\n", data_set[1])
+        # print("Predicted:\n", decoded_predictions)
+        print("Amount of wrongly predicted classes:\n",
+              len(data_set[1]) - correct,
+              "from total of {0} input slices.".format(len(data_set[1])))
+        print("Accuracy of {0}%".format((correct / len(data_set[1])) * 100))
+
     else:
         print("Error: Prediction data set ({0}) can't contain 0 samples.".format(len(data_set[0])),
               file=sys.stderr)

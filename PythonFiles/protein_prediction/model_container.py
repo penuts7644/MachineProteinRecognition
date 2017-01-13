@@ -274,7 +274,7 @@ class ModelContainer:
         """
         This function predicts the data using a created model.
         Input: The data set to predict and batch size, uses model.
-        Output: -, print information about the data set prediction.
+        Output: Returns the decoded predictions from the data set given.
         """
 
         print("Predicting on {0} samples".format(len(data_set[0])), end="")
@@ -289,21 +289,10 @@ class ModelContainer:
         print(" -- Done\n", end="")
         sys.stdout.flush()
 
-        # BELOW FOR TESTING PURPOSES!
-
-        # Decode the labels to string.
+        # Decode the labels to string and return
         decoded_predictions = self._decode_label([data_set[1],
                                                   predictions])
-
-        correct = len([i for i, j in zip(data_set[1], decoded_predictions) if i == j])
-        print("\n")
-        # print("Original:\n", data_set[1])
-        # print("Predicted:\n", decoded_predictions)
-        print("Amount of wrongly predicted classes:\n",
-              len(data_set[1]) - correct,
-              "from total of {0} input slices.".format(len(data_set[1])))
-        print("Accuracy of {0}%".format((correct / len(data_set[1])) * 100))
-        print("\n")
+        return decoded_predictions
 
     @staticmethod
     def _modify_filename(output_dir,
@@ -371,7 +360,7 @@ class ModelContainer:
         """
 
         # Load the JSON file and create model if the file exists.
-        if os.path.isfile(model_file) or os.path.isfile(weights_file) or os.path.isfile(config_file):
+        if os.path.isfile(model_file) and os.path.isfile(weights_file) and os.path.isfile(config_file):
             json_file = open(model_file, "r")
             json_model_config = json_file.read()
             json_file.close()
