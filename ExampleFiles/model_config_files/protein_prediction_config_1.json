@@ -4,11 +4,11 @@
       "class_name": "Convolution2D",
       "input_shape_dimensions": "3",
       "config": {
-        "nb_filter": "80",
-        "nb_row": "5",
-        "nb_col": "5",
-        "init": "'normal'",
-        "activation": "'linear'",
+        "nb_filter": "32",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'uniform'",
+        "activation": "'relu'",
         "border_mode": "'same'",
         "dim_ordering": "'th'"
       }
@@ -16,7 +16,7 @@
     {
       "class_name": "MaxPooling2D",
       "config": {
-        "pool_size": "(5, 5)",
+        "pool_size": "(2, 2)",
         "border_mode": "'same'",
         "dim_ordering": "'th'"
       }
@@ -24,11 +24,39 @@
     {
       "class_name": "Convolution2D",
       "config": {
-        "nb_filter": "80",
-        "nb_row": "4",
-        "nb_col": "4",
-        "init": "'normal'",
-        "activation": "'linear'",
+        "nb_filter": "32",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'uniform'",
+        "activation": "'relu'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "MaxPooling2D",
+      "config": {
+        "pool_size": "(2, 2)",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "Convolution2D",
+      "config": {
+        "nb_filter": "64",
+        "nb_row": "3",
+        "nb_col": "3",
+        "init": "'uniform'",
+        "activation": "'relu'",
+        "border_mode": "'same'",
+        "dim_ordering": "'th'"
+      }
+    },
+    {
+      "class_name": "MaxPooling2D",
+      "config": {
+        "pool_size": "(2, 2)",
         "border_mode": "'same'",
         "dim_ordering": "'th'"
       }
@@ -40,15 +68,29 @@
     {
       "class_name": "Dense",
       "config": {
+        "output_dim": "64",
+        "init": "'uniform'",
+        "activation": "'relu'"
+      }
+    },
+    {
+      "class_name": "Dropout",
+      "config": {
+        "p": "0.5"
+      }
+    },
+    {
+      "class_name": "Dense",
+      "config": {
         "output_dim": "1",
-        "init": "'normal'",
+        "init": "'uniform'",
         "activation": "'sigmoid'"
       }
     }
   ],
   "compile_config": {
     "loss": "'binary_crossentropy'",
-    "optimizer": "'adam'",
+    "optimizer": "'rmsprop'",
     "metrics": "['accuracy']"
   }
 }

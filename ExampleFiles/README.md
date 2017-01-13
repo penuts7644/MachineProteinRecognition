@@ -32,5 +32,5 @@ In the `model_config_files` directory, there are some configuration files that c
 * An `input_shape_dimensions` of 4 could generate an `input_shape` of (None, 1, 80 , 80, 80)
 * An `input_shape_dimensions` of 5 could generate an `input_shape` of (None, 3, 100, 100, 100, 100)
 
-NOTE: The dataset creator uses a image dimension ordering like examples 3, 4 and 5. For each layer, `the dim_ordering` argument should always be set to 'th' (Theano way of sorting).
+NOTE: The dataset creator uses a image dimension ordering like examples 3, 4 and 5. For each layer, `the dim_ordering` argument should always be set to 'th' (Theano API way of sorting).
 NOTE: All values need double quotes. If the values need to be read as string values, they should also have single quotes within the double quotes.

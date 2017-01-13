@@ -16,7 +16,7 @@
 source activate tensorflow
 
 # All your python scripts go here:
-/location/to/python/script/model_trainer.py -i /location/to/input/data/directory/ -o /location/to/output/directory/  -c /location/to/model/configuration/directory/ -b 100 -e 10 -r 2 -w 100 -H 5 -V 5 -v 60 -t 60 -M
+/location/to/python/script/model_trainer.py -i /location/to/input/data/directory/ -o /location/to/output/directory/  -c /location/to/model/configuration/directory/ -b 10 -e 100 -r 2 -w 250 -H 5 -V 5 -v 80 -t 80 -M
 
 # Monitoring jobs using "squeue -u $USER"
 # Cancel jobs using "scancel JOBID"
