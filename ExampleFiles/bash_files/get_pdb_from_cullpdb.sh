@@ -1,7 +1,7 @@
 #! /bin/sh
 
 # Bash script that uses the first column of a cull pdb file to get the corresponding pdb files from given directory.
-# W. van Helvoirt, 2016
+# W. van Helvoirt, 2017
 
 # Check if arguments given by user.
 if [ -z $1 ]
