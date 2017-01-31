@@ -69,13 +69,15 @@ class CsvToDatasetParser:
                               matrix,
                               examples):
         """
-        This function creates multiple matrix slices from the given matrix, these can be single or multi channel.
+        This function creates multiple matrix slices from the given matrix, these can be single or multi-channel. The
+        slices made for each file are kept together and added as a whole later on.
         Input: The matrix to slice and examples list to fill.
         Output: Return the amount of slices made and updated examples list.
         """
 
-        # Keep track of amount of slices produced with counter.
+        # Keep track of amount of slices produced with counter gather parts of the file in a list.
         slice_amount = 0
+        parts_list = []
 
         # Use multiple range to move through the matrix.
         for i in range(0, len(matrix) - self.window_size, self.ver_window):
@@ -90,9 +92,9 @@ class CsvToDatasetParser:
                     matrix_3 = matrix[i:i + self.window_size, j + 2:j + 1 + (self.window_size * 3):3]
 
                     # Append the slice containing the 3 parts to the example list.
-                    examples.append([matrix_1,
-                                     matrix_2,
-                                     matrix_3])
+                    parts_list.append([matrix_1,
+                                       matrix_2,
+                                       matrix_3])
                     slice_amount += 1
 
             # If files contain contact map only, don't use step size.
@@ -103,10 +105,11 @@ class CsvToDatasetParser:
                     matrix_1 = matrix[i:i + self.window_size, j:j + self.window_size]
 
                     # Append the matrix slice to the example list.
-                    examples.append([matrix_1])
+                    parts_list.append([matrix_1])
                     slice_amount += 1
 
         # Return updated examples list and the amount of slices made.
+        examples.append(parts_list)
         return examples, slice_amount
 
     def _read_label(self,
@@ -119,6 +122,9 @@ class CsvToDatasetParser:
         Output: Returns updated labels list.
         """
 
+        # Gather label parts in the list.
+        parts_list = []
+
         # Get the first line in file, return it.
         with open(file_path) as file:
             line = file.readline()
@@ -128,7 +134,8 @@ class CsvToDatasetParser:
                 for i in range(slice_amount):
 
                     # Append label array to the list.
-                    labels.append(line.lstrip(self.comment_char + " ").rstrip(" \n"))
+                    parts_list.append(line.lstrip(self.comment_char + " ").rstrip(" \n"))
+                labels.append(parts_list)
                 return labels
 
     def _create_partition(self,
@@ -171,9 +178,10 @@ class CsvToDatasetParser:
             amount_of_partitions = len(set(partition))
         output_list = [[] for _ in range(amount_of_partitions)]
 
-        # For each item in the partition list, append the data item to output_list index position.
+        # For each item in the partition list, append the the slices in the item to output_list index position.
         for i in range(len(partition)):
-            output_list[partition[i]].append(data[i])
+            for j in data[i]:
+                output_list[partition[i]].append(j)
         return output_list
 
     def create_datasets(self,
